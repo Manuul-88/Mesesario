@@ -1,7 +1,8 @@
-import shutil
-import uuid
+import os
 from pathlib import Path
 
+import cloudinary
+import cloudinary.uploader
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -15,11 +16,15 @@ from .schemas import MemoryMonthOut
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent.parent
 STATIC_DIR = PROJECT_ROOT / "frontend" / "static"
-UPLOAD_DIR = BASE_DIR / "uploads"
-
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="Mesesario con BD")
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,10 +42,6 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
-print("STATIC_DIR =", STATIC_DIR)
-print("EXISTE STATIC_DIR =", STATIC_DIR.exists())
-
-app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
@@ -56,14 +57,12 @@ def save_upload(file: UploadFile | None) -> str | None:
     if not file or not file.filename:
         return None
 
-    suffix = Path(file.filename).suffix.lower() or ".jpg"
-    filename = f"{uuid.uuid4().hex}{suffix}"
-    destination = UPLOAD_DIR / filename
+    result = cloudinary.uploader.upload(
+        file.file,
+        folder="mesesario"
+    )
 
-    with destination.open("wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-    return f"/uploads/{filename}"
+    return result.get("secure_url")
 
 
 @app.get("/")
