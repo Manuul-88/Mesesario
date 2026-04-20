@@ -53,7 +53,7 @@ def get_db():
         db.close()
 
 
-def save_upload(file: UploadFile | None) -> str | None:
+def save_upload(file: UploadFile | None):
     if not file or not file.filename:
         return None
 
@@ -62,7 +62,10 @@ def save_upload(file: UploadFile | None) -> str | None:
         folder="mesesario"
     )
 
-    return result.get("secure_url")
+    return {
+        "url": result.get("secure_url"),
+        "public_id": result.get("public_id"),
+    }
 
 
 @app.get("/")
@@ -89,7 +92,7 @@ def create_month(
     db: Session = Depends(get_db),
 ):
     next_order = (db.query(MemoryMonth).count() or 0) + 1
-    image_path = save_upload(image)
+    uploaded = save_upload(image)
 
     if is_featured:
         db.query(MemoryMonth).update({MemoryMonth.is_featured: False})
@@ -97,15 +100,16 @@ def create_month(
     month = MemoryMonth(
         month_label=month_label,
         description=description,
-        image_path=image_path,
+        image_path=uploaded["url"] if uploaded else None,
+        image_public_id=uploaded["public_id"] if uploaded else None,
         is_featured=is_featured,
         sort_order=next_order,
     )
+
     db.add(month)
     db.commit()
     db.refresh(month)
     return month
-
 
 @app.put("/api/months/{month_id}", response_model=MemoryMonthOut)
 def update_month(
@@ -129,20 +133,32 @@ def update_month(
     month.is_featured = is_featured
 
     if image and image.filename:
-        month.image_path = save_upload(image)
+        if month.image_public_id:
+            cloudinary.uploader.destroy(month.image_public_id)
+
+        uploaded = save_upload(image)
+        month.image_path = uploaded["url"] if uploaded else None
+        month.image_public_id = uploaded["public_id"] if uploaded else None
+
     elif not keep_existing_image:
+        if month.image_public_id:
+            cloudinary.uploader.destroy(month.image_public_id)
+
         month.image_path = None
+        month.image_public_id = None
 
     db.commit()
     db.refresh(month)
     return month
-
 
 @app.delete("/api/months/{month_id}")
 def delete_month(month_id: int, db: Session = Depends(get_db)):
     month = db.query(MemoryMonth).filter(MemoryMonth.id == month_id).first()
     if not month:
         raise HTTPException(status_code=404, detail="Mes no encontrado")
+
+    if month.image_public_id:
+        cloudinary.uploader.destroy(month.image_public_id)
 
     db.delete(month)
     db.commit()
@@ -152,6 +168,7 @@ def delete_month(month_id: int, db: Session = Depends(get_db)):
         .order_by(MemoryMonth.sort_order.asc(), MemoryMonth.id.asc())
         .all()
     )
+
     for index, item in enumerate(ordered, start=1):
         item.sort_order = index
 
