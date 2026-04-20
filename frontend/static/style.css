@@ -1,0 +1,290 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffd6e7, #ffeef5, #fff7fb);
+  color: #4a1f2d;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 0 60px;
+}
+
+.hero {
+  text-align: center;
+  padding: 80px 20px 40px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+button {
+  background: #ff4f87;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  font-size: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+button:hover {
+  background: #e63d74;
+  transform: scale(1.05);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.timeline-item {
+  margin-bottom: 20px;
+}
+
+.timeline-item h3 {
+  margin-bottom: 8px;
+  color: #c53068;
+}
+
+.gallery-subtitle {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #7b3a4c;
+  line-height: 1.5;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.photo-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.photo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.photo-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-info {
+  padding: 14px;
+}
+
+.photo-info h3 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+  color: #c53068;
+}
+
+.photo-info p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #5f3140;
+}
+
+.featured {
+  border: 2px solid rgba(255, 79, 135, 0.25);
+}
+
+.hidden {
+  display: none;
+}
+
+.final-message {
+  text-align: center;
+}
+
+.counter-intro {
+  margin-bottom: 12px;
+  color: #7b3a4c;
+}
+
+#timeTogether {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: #c53068;
+}
+
+.big-love {
+  font-size: 2rem;
+  margin-top: 15px;
+  color: #d61f69;
+  font-weight: bold;
+}
+
+.hearts::before,
+.hearts::after {
+  content: "💞 💞 💞 💞 💞";
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  left: 0;
+  font-size: 1.5rem;
+  opacity: 0.15;
+  animation: floatHearts 5s linear infinite;
+  pointer-events: none;
+}
+
+.hearts::after {
+  top: 70%;
+  animation-delay: 1s;
+}
+
+@keyframes floatHearts {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.15;
+  }
+  80% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .card {
+    padding: 22px;
+  }
+
+  .photo-card img {
+    height: 220px;
+  }
+
+  .big-love {
+    font-size: 1.5rem;
+  }
+
+  #timeTogether {
+    font-size: 1.1rem;
+  }
+}
+.future {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px dashed rgba(255, 79, 135, 0.4);
+  height: 240px;
+}
+
+.future-content {
+  text-align: center;
+  padding: 10px;
+}
+
+.future-content h3 {
+  color: #c53068;
+  margin-bottom: 10px;
+}
+
+.future-content p {
+  font-size: 0.95rem;
+  color: #7b3a4c;
+  line-height: 1.4;
+}
+
+.edit-toolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.editor-panel {
+  background: rgba(255,255,255,0.92);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.editor-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.editor-panel input[type="text"],
+.editor-panel textarea,
+.editor-panel input[type="file"] {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.editor-panel textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.checkbox-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 14px 14px;
+  flex-wrap: wrap;
+}
