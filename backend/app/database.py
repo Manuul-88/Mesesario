@@ -1,13 +1,14 @@
-#conecta con sqlite
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "sqlite:///./mesesario.db" #crea un archivo sqlite en el proyecto
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./mesesario.db")
 
-engine = create_engine( #cinecta con la bd
-    DATABASE_URL,
-    connect_args={"check_same_thread": False},
-)
+connect_args = {}
+if DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) #abre sesiones para consultar y guardar
-Base = declarative_base() #sirve para definir tablas
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
