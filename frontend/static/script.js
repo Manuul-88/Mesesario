@@ -25,14 +25,11 @@ const startDate = new Date("2025-04-12T14:10:00");
 // Local:
 // const API_URL = "http://127.0.0.1:8000";
 
-// Producción:
-// const API_URL = "https://tu-backend.onrender.com";
-
 // Auto:
 const API_URL =
   window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
     ? "http://127.0.0.1:8000"
-    : "https://tu-backend.onrender.com";
+    : "https://mesesario-backend.onrender.com";
 
 let counterStarted = false;
 let counterInterval = null;
