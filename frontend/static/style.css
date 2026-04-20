@@ -154,7 +154,7 @@ button:hover {
 
 .hearts::before,
 .hearts::after {
-  content: "💞 💞 💞 💞 💞";
+  content: "💞urru urru💞";
   position: fixed;
   width: 100%;
   text-align: center;
