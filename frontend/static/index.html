@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mesesario</title>
-  <link rel="stylesheet" href="/static/style.css" />
+
+  <!-- 🔥 CORREGIDO -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="hearts"></div>
@@ -48,76 +50,60 @@
     </section>
 
     <section id="gallery" class="card hidden">
-  <h2>Nuestro registro mensual</h2>
-  <p class="gallery-subtitle">
-    Una sola foto destacada por mes para recordar siempre que queramos cómo se ha visto nuestro tiempo juntos e ir agregando más
-  </p>
+      <h2>Nuestro registro mensual</h2>
 
-  <div class="edit-toolbar">
-    <button id="toggleEditBtn" type="button">Modo editar</button>
-  </div>
-
-  <div id="editorPanel" class="editor-panel hidden">
-    <h3 id="formTitle">Agregar mes</h3>
-
-    <form id="monthForm">
-      <input type="hidden" id="monthId" />
-
-      <label>Mes</label>
-      <input type="text" id="monthLabel" required />
-
-      <label>Descripción</label>
-      <textarea id="monthDescription" required></textarea>
-
-      <label>Imagen</label>
-      <input type="file" id="monthImage" accept="image/*" />
-
-      <label class="checkbox-line">
-        <input type="checkbox" id="isFeatured" />
-        Destacar este mes
-      </label>
-
-      <label class="checkbox-line">
-        <input type="checkbox" id="keepExistingImage" checked />
-        Conservar imagen actual si no subo otra
-      </label>
-
-      <div class="form-actions">
-        <button type="submit">Guardar</button>
-        <button type="button" id="cancelEditBtn">Cancelar</button>
+      <div class="edit-toolbar">
+        <button id="toggleEditBtn" type="button">Modo editar</button>
       </div>
-    </form>
-  </div>
 
-  <div class="gallery" id="galleryGrid"></div>
-</section>
+      <div id="editorPanel" class="editor-panel hidden">
+        <h3 id="formTitle">Agregar mes</h3>
+
+        <form id="monthForm">
+          <input type="hidden" id="monthId" />
+
+          <label>Mes</label>
+          <input type="text" id="monthLabel" required />
+
+          <label>Descripción</label>
+          <textarea id="monthDescription" required></textarea>
+
+          <label>Imagen</label>
+          <input type="file" id="monthImage" accept="image/*" />
+
+          <label class="checkbox-line">
+            <input type="checkbox" id="isFeatured" />
+            Destacar este mes
+          </label>
+
+          <label class="checkbox-line">
+            <input type="checkbox" id="keepExistingImage" checked />
+            Conservar imagen actual
+          </label>
+
+          <div class="form-actions">
+            <button type="submit">Guardar</button>
+            <button type="button" id="cancelEditBtn">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="gallery" id="galleryGrid"></div>
+    </section>
 
     <section id="letter" class="card hidden">
       <h2>Una carta para ti</h2>
-      <p>
-        Mi amor, no encuentro las palabras para expresar lo mucho que este último año ha significado para mí
-        <br /><br />
-        Gracias por tu cariño, tu paciencia, tu compañía y sobre todo por entenderme,
-        y por todos los momentos que hemos compartido
-        <br /><br />
-        Me haces muy feliz y quiero seguir construyendo recuerdos contigo,
-        seguir aprendiendo de nosotros y seguir eligiéndote cada día
-        <br /><br />
-        Te amo<br />
-        <br />Feliz aniversario ❤️
-      </p>
-
+      <p>Te amo ❤️</p>
       <button id="finalBtn">por cierto...</button>
     </section>
 
     <section id="surprise" class="card hidden final-message">
-      <h2>Cada momento contigo ha hecho que este tiempo valga muchísimo más <br />❤️</h2>
-      <p class="counter-intro">Desde el 12 de abril de 2025 a las 2:10 pm...</p>
+      <h2>❤️</h2>
       <h3 id="timeTogether"></h3>
-      <p class="big-love">Y quiero seguir sumando tiempo contigo</p>
     </section>
   </main>
 
-  <script src="/static/script.js"></script>
+  <!-- 🔥 CORREGIDO -->
+  <script src="script.js"></script>
 </body>
 </html>
