@@ -133,7 +133,7 @@ if (monthImage2.files && monthImage2.files[0]) {
     await loadMonths();
   } catch (error) {
     console.error(error);
-    alert("No se pudo guardar el mes.");
+    alert(error.message);
   }
 });
 
