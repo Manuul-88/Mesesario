@@ -226,7 +226,7 @@ function renderMonths() {
 
       <div class="memory-pair">
         <div class="memory-box side-one">
-          <div class="memory-badge">💙 Tú</div>
+          <div class="memory-badge">Manol</div>
           ${leftImage}
           <p>${escapeHtml(month.description_1 || "")}</p>
         </div>
@@ -234,7 +234,7 @@ function renderMonths() {
         <div class="memory-center">❤️</div>
 
         <div class="memory-box side-two">
-          <div class="memory-badge">💖 Ella</div>
+          <div class="memory-badge">Jess</div>
           ${rightImage}
           <p>${escapeHtml(month.description_2 || "")}</p>
         </div>
