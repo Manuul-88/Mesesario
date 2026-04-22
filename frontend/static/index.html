@@ -64,29 +64,48 @@
         <form id="monthForm">
           <input type="hidden" id="monthId" />
 
-          <label>Mes</label>
-          <input type="text" id="monthLabel" required />
+<label>Mes</label>
+<input type="text" id="monthLabel" required />
 
-          <label>Descripción</label>
-          <textarea id="monthDescription" required></textarea>
+<div class="dual-editor">
+  <div class="memory-side side-one">
+    <h4>Manol</h4>
+    <label>Tu descripción</label>
+    <textarea id="monthDescription1" required></textarea>
 
-          <label>Imagen</label>
-          <input type="file" id="monthImage" accept="image/*" />
+    <label>Tu imagen</label>
+    <input type="file" id="monthImage1" accept="image/*" />
 
-          <label class="checkbox-line">
-            <input type="checkbox" id="isFeatured" />
-            Destacar este mes
-          </label>
+    <label class="checkbox-line">
+      <input type="checkbox" id="keepExistingImage1" checked />
+      Conservar imagen actual
+    </label>
+  </div>
 
-          <label class="checkbox-line">
-            <input type="checkbox" id="keepExistingImage" checked />
-            Conservar imagen actual
-          </label>
+  <div class="memory-side side-two">
+    <h4>Jess</h4>
+    <label>Su descripción</label>
+    <textarea id="monthDescription2" required></textarea>
 
-          <div class="form-actions">
-            <button type="submit">Guardar</button>
-            <button type="button" id="cancelEditBtn">Cancelar</button>
-          </div>
+    <label>Su imagen</label>
+    <input type="file" id="monthImage2" accept="image/*" />
+
+    <label class="checkbox-line">
+      <input type="checkbox" id="keepExistingImage2" checked />
+      Conservar imagen actual
+    </label>
+  </div>
+</div>
+
+<label class="checkbox-line">
+  <input type="checkbox" id="isFeatured" />
+  Destacar este mes
+</label>
+
+<div class="form-actions">
+  <button type="submit">Guardar</button>
+  <button type="button" id="cancelEditBtn">Cancelar</button>
+</div>
         </form>
       </div>
 

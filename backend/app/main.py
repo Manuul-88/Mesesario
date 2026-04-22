@@ -86,22 +86,29 @@ def get_months(db: Session = Depends(get_db)):
 @app.post("/api/months", response_model=MemoryMonthOut)
 def create_month(
     month_label: str = Form(...),
-    description: str = Form(...),
+    description_1: str = Form(""),
+    description_2: str = Form(""),
     is_featured: bool = Form(False),
-    image: UploadFile | None = File(None),
+    image_1: UploadFile | None = File(None),
+    image_2: UploadFile | None = File(None),
     db: Session = Depends(get_db),
 ):
     next_order = (db.query(MemoryMonth).count() or 0) + 1
-    uploaded = save_upload(image)
+
+    uploaded_1 = save_upload(image_1)
+    uploaded_2 = save_upload(image_2)
 
     if is_featured:
         db.query(MemoryMonth).update({MemoryMonth.is_featured: False})
 
     month = MemoryMonth(
         month_label=month_label,
-        description=description,
-        image_path=uploaded["url"] if uploaded else None,
-        image_public_id=uploaded["public_id"] if uploaded else None,
+        description_1=description_1,
+        image_path_1=uploaded_1["url"] if uploaded_1 else None,
+        image_public_id_1=uploaded_1["public_id"] if uploaded_1 else None,
+        description_2=description_2,
+        image_path_2=uploaded_2["url"] if uploaded_2 else None,
+        image_public_id_2=uploaded_2["public_id"] if uploaded_2 else None,
         is_featured=is_featured,
         sort_order=next_order,
     )
@@ -115,10 +122,13 @@ def create_month(
 def update_month(
     month_id: int,
     month_label: str = Form(...),
-    description: str = Form(...),
+    description_1: str = Form(""),
+    description_2: str = Form(""),
     is_featured: bool = Form(False),
-    keep_existing_image: bool = Form(True),
-    image: UploadFile | None = File(None),
+    keep_existing_image_1: bool = Form(True),
+    keep_existing_image_2: bool = Form(True),
+    image_1: UploadFile | None = File(None),
+    image_2: UploadFile | None = File(None),
     db: Session = Depends(get_db),
 ):
     month = db.query(MemoryMonth).filter(MemoryMonth.id == month_id).first()
@@ -129,23 +139,33 @@ def update_month(
         db.query(MemoryMonth).update({MemoryMonth.is_featured: False})
 
     month.month_label = month_label
-    month.description = description
+    month.description_1 = description_1
+    month.description_2 = description_2
     month.is_featured = is_featured
 
-    if image and image.filename:
-        if month.image_public_id:
-            cloudinary.uploader.destroy(month.image_public_id)
+    if image_1 and image_1.filename:
+        if month.image_public_id_1:
+            cloudinary.uploader.destroy(month.image_public_id_1)
+        uploaded_1 = save_upload(image_1)
+        month.image_path_1 = uploaded_1["url"] if uploaded_1 else None
+        month.image_public_id_1 = uploaded_1["public_id"] if uploaded_1 else None
+    elif not keep_existing_image_1:
+        if month.image_public_id_1:
+            cloudinary.uploader.destroy(month.image_public_id_1)
+        month.image_path_1 = None
+        month.image_public_id_1 = None
 
-        uploaded = save_upload(image)
-        month.image_path = uploaded["url"] if uploaded else None
-        month.image_public_id = uploaded["public_id"] if uploaded else None
-
-    elif not keep_existing_image:
-        if month.image_public_id:
-            cloudinary.uploader.destroy(month.image_public_id)
-
-        month.image_path = None
-        month.image_public_id = None
+    if image_2 and image_2.filename:
+        if month.image_public_id_2:
+            cloudinary.uploader.destroy(month.image_public_id_2)
+        uploaded_2 = save_upload(image_2)
+        month.image_path_2 = uploaded_2["url"] if uploaded_2 else None
+        month.image_public_id_2 = uploaded_2["public_id"] if uploaded_2 else None
+    elif not keep_existing_image_2:
+        if month.image_public_id_2:
+            cloudinary.uploader.destroy(month.image_public_id_2)
+        month.image_path_2 = None
+        month.image_public_id_2 = None
 
     db.commit()
     db.refresh(month)
@@ -157,8 +177,11 @@ def delete_month(month_id: int, db: Session = Depends(get_db)):
     if not month:
         raise HTTPException(status_code=404, detail="Mes no encontrado")
 
-    if month.image_public_id:
-        cloudinary.uploader.destroy(month.image_public_id)
+    if month.image_public_id_1:
+        cloudinary.uploader.destroy(month.image_public_id_1)
+
+    if month.image_public_id_2:
+        cloudinary.uploader.destroy(month.image_public_id_2)
 
     db.delete(month)
     db.commit()
@@ -168,7 +191,6 @@ def delete_month(month_id: int, db: Session = Depends(get_db)):
         .order_by(MemoryMonth.sort_order.asc(), MemoryMonth.id.asc())
         .all()
     )
-
     for index, item in enumerate(ordered, start=1):
         item.sort_order = index
 

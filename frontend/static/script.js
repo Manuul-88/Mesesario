@@ -13,10 +13,13 @@ const editorPanel = document.getElementById("editorPanel");
 const monthForm = document.getElementById("monthForm");
 const monthId = document.getElementById("monthId");
 const monthLabel = document.getElementById("monthLabel");
-const monthDescription = document.getElementById("monthDescription");
-const monthImage = document.getElementById("monthImage");
 const isFeatured = document.getElementById("isFeatured");
-const keepExistingImage = document.getElementById("keepExistingImage");
+const monthDescription1 = document.getElementById("monthDescription1");
+const monthDescription2 = document.getElementById("monthDescription2");
+const monthImage1 = document.getElementById("monthImage1");
+const monthImage2 = document.getElementById("monthImage2");
+const keepExistingImage1 = document.getElementById("keepExistingImage1");
+const keepExistingImage2 = document.getElementById("keepExistingImage2");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 const formTitle = document.getElementById("formTitle");
 
@@ -73,14 +76,27 @@ cancelEditBtn?.addEventListener("click", () => {
 monthForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const formData = new FormData();
-  formData.append("month_label", monthLabel.value.trim());
-  formData.append("description", monthDescription.value.trim());
-  formData.append("is_featured", isFeatured.checked ? "true" : "false");
-  formData.append(
-    "keep_existing_image",
-    keepExistingImage.checked ? "true" : "false"
-  );
+const formData = new FormData();
+formData.append("month_label", monthLabel.value.trim());
+formData.append("description_1", monthDescription1.value.trim());
+formData.append("description_2", monthDescription2.value.trim());
+formData.append("is_featured", isFeatured.checked ? "true" : "false");
+formData.append(
+  "keep_existing_image_1",
+  keepExistingImage1.checked ? "true" : "false"
+);
+formData.append(
+  "keep_existing_image_2",
+  keepExistingImage2.checked ? "true" : "false"
+);
+
+if (monthImage1.files && monthImage1.files[0]) {
+  formData.append("image_1", monthImage1.files[0]);
+}
+
+if (monthImage2.files && monthImage2.files[0]) {
+  formData.append("image_2", monthImage2.files[0]);
+}
 
   if (monthImage.files && monthImage.files[0]) {
     formData.append("image", monthImage.files[0]);
@@ -193,12 +209,37 @@ function renderMonths() {
       ? `<img src="${normalizeImageUrl(month.image_path)}" alt="${escapeHtml(month.month_label)}" />`
       : `<div class="future" style="height:240px;">Sin imagen</div>`;
 
+
+    const leftImage = month.image_path_1
+  ? `<img src="${normalizeImageUrl(month.image_path_1)}" alt="Tu recuerdo" />`
+  : `<div class="memory-placeholder">Sin imagen</div>`;
+
+    const rightImage = month.image_path_2
+      ? `<img src="${normalizeImageUrl(month.image_path_2)}" alt="Su recuerdo" />`
+      : `<div class="memory-placeholder">Sin imagen</div>`;
+
     card.innerHTML = `
-      ${imageHtml}
-      <div class="photo-info">
+      <div class="month-header">
         <h3>${escapeHtml(month.month_label)}</h3>
-        <p>${escapeHtml(month.description)}</p>
+        <p>Dos recuerdos, un mismo mes</p>
       </div>
+
+      <div class="memory-pair">
+        <div class="memory-box side-one">
+          <div class="memory-badge">💙 Tú</div>
+          ${leftImage}
+          <p>${escapeHtml(month.description_1 || "")}</p>
+        </div>
+
+        <div class="memory-center">❤️</div>
+
+        <div class="memory-box side-two">
+          <div class="memory-badge">💖 Ella</div>
+          ${rightImage}
+          <p>${escapeHtml(month.description_2 || "")}</p>
+        </div>
+      </div>
+
       ${
         editMode
           ? `
@@ -206,10 +247,10 @@ function renderMonths() {
             <button type="button" onclick="editMonth(${month.id})">Editar</button>
             <button type="button" onclick="deleteMonth(${month.id})">Eliminar</button>
           </div>
-        `
+          `
           : ""
       }
-    `;
+    `;  
 
     galleryGrid.appendChild(card);
   });
@@ -255,7 +296,8 @@ function resetForm() {
   monthForm?.reset();
 
   if (monthId) monthId.value = "";
-  if (keepExistingImage) keepExistingImage.checked = true;
+  if (keepExistingImage1) keepExistingImage1.checked = true;
+  if (keepExistingImage2) keepExistingImage2.checked = true;
   if (formTitle) formTitle.textContent = "Agregar mes";
 }
 
@@ -265,9 +307,11 @@ window.editMonth = function (id) {
 
   monthId.value = month.id;
   monthLabel.value = month.month_label;
-  monthDescription.value = month.description;
   isFeatured.checked = month.is_featured;
-  keepExistingImage.checked = true;
+  monthDescription1.value = month.description_1 || "";
+  monthDescription2.value = month.description_2 || "";
+  keepExistingImage1.checked = true;
+  keepExistingImage2.checked = true;
 
   formTitle.textContent = "Editar mes";
   editorPanel?.classList.remove("hidden");
