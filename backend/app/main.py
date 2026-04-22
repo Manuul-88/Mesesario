@@ -111,17 +111,13 @@ def create_month(
 
     month = MemoryMonth(
     month_label=month_label,
-
     description=description_1 or description_2 or "",
-
     description_1=description_1,
     image_path_1=uploaded_1["url"] if uploaded_1 else None,
     image_public_id_1=uploaded_1["public_id"] if uploaded_1 else None,
-
     description_2=description_2,
     image_path_2=uploaded_2["url"] if uploaded_2 else None,
     image_public_id_2=uploaded_2["public_id"] if uploaded_2 else None,
-
     is_featured=is_featured_bool,
     sort_order=next_order,
 )
