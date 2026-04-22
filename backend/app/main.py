@@ -26,8 +26,6 @@ cloudinary.config(
     secure=True,
 )
 
-from fastapi.middleware.cors import CORSMiddleware
-
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex=r"https://.*\.vercel\.app",
@@ -47,6 +45,14 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def parse_bool(value) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    return str(value).strip().lower() in {"true", "1", "yes", "on"}
 
 
 def save_upload(file: UploadFile | None):
@@ -84,17 +90,19 @@ def create_month(
     month_label: str = Form(...),
     description_1: str = Form(""),
     description_2: str = Form(""),
-    is_featured: bool = Form(False),
+    is_featured: str = Form("false"),
     image_1: UploadFile | None = File(None),
     image_2: UploadFile | None = File(None),
     db: Session = Depends(get_db),
 ):
+    is_featured_bool = parse_bool(is_featured)
+
     next_order = (db.query(MemoryMonth).count() or 0) + 1
 
-    uploaded_1 = save_upload(image_1)
-    uploaded_2 = save_upload(image_2)
+    uploaded_1 = save_upload(image_1) if image_1 else None
+    uploaded_2 = save_upload(image_2) if image_2 else None
 
-    if is_featured:
+    if is_featured_bool:
         db.query(MemoryMonth).update({MemoryMonth.is_featured: False})
 
     month = MemoryMonth(
@@ -105,7 +113,7 @@ def create_month(
         description_2=description_2,
         image_path_2=uploaded_2["url"] if uploaded_2 else None,
         image_public_id_2=uploaded_2["public_id"] if uploaded_2 else None,
-        is_featured=is_featured,
+        is_featured=is_featured_bool,
         sort_order=next_order,
     )
 
@@ -114,15 +122,16 @@ def create_month(
     db.refresh(month)
     return month
 
+
 @app.put("/api/months/{month_id}", response_model=MemoryMonthOut)
 def update_month(
     month_id: int,
     month_label: str = Form(...),
     description_1: str = Form(""),
     description_2: str = Form(""),
-    is_featured: bool = Form(False),
-    keep_existing_image_1: bool = Form(True),
-    keep_existing_image_2: bool = Form(True),
+    is_featured: str = Form("false"),
+    keep_existing_image_1: str = Form("true"),
+    keep_existing_image_2: str = Form("true"),
     image_1: UploadFile | None = File(None),
     image_2: UploadFile | None = File(None),
     db: Session = Depends(get_db),
@@ -131,13 +140,17 @@ def update_month(
     if not month:
         raise HTTPException(status_code=404, detail="Mes no encontrado")
 
-    if is_featured:
+    is_featured_bool = parse_bool(is_featured)
+    keep_existing_1_bool = parse_bool(keep_existing_image_1)
+    keep_existing_2_bool = parse_bool(keep_existing_image_2)
+
+    if is_featured_bool:
         db.query(MemoryMonth).update({MemoryMonth.is_featured: False})
 
     month.month_label = month_label
     month.description_1 = description_1
     month.description_2 = description_2
-    month.is_featured = is_featured
+    month.is_featured = is_featured_bool
 
     if image_1 and image_1.filename:
         if month.image_public_id_1:
@@ -145,7 +158,7 @@ def update_month(
         uploaded_1 = save_upload(image_1)
         month.image_path_1 = uploaded_1["url"] if uploaded_1 else None
         month.image_public_id_1 = uploaded_1["public_id"] if uploaded_1 else None
-    elif not keep_existing_image_1:
+    elif not keep_existing_1_bool:
         if month.image_public_id_1:
             cloudinary.uploader.destroy(month.image_public_id_1)
         month.image_path_1 = None
@@ -157,7 +170,7 @@ def update_month(
         uploaded_2 = save_upload(image_2)
         month.image_path_2 = uploaded_2["url"] if uploaded_2 else None
         month.image_public_id_2 = uploaded_2["public_id"] if uploaded_2 else None
-    elif not keep_existing_image_2:
+    elif not keep_existing_2_bool:
         if month.image_public_id_2:
             cloudinary.uploader.destroy(month.image_public_id_2)
         month.image_path_2 = None
@@ -166,6 +179,7 @@ def update_month(
     db.commit()
     db.refresh(month)
     return month
+
 
 @app.delete("/api/months/{month_id}")
 def delete_month(month_id: int, db: Session = Depends(get_db)):
