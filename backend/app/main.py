@@ -32,7 +32,7 @@ app.add_middleware(
         "https://mesesario-beta.vercel.app",
         "https://mesesario-bgxsc7ue4-manul-88s-projects.vercel.app",
     ],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
