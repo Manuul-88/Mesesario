@@ -28,7 +28,10 @@ cloudinary.config(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_origins=[
+        "https://mesesario-beta.vercel.app",
+        "https://mesesario-bgxsc7ue4-manul-88s-projects.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
