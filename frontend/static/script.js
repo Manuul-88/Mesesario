@@ -98,14 +98,6 @@ if (monthImage2.files && monthImage2.files[0]) {
   formData.append("image_2", monthImage2.files[0]);
 }
 
-  if (monthImage1.files && monthImage1.files[0]) {
-  formData.append("image_1", monthImage1.files[0]);
-}
-
-if (monthImage2.files && monthImage2.files[0]) {
-  formData.append("image_2", monthImage2.files[0]);
-}
-
   const id = monthId.value.trim();
 
   try {
