@@ -1,95 +1,118 @@
 # Mesesario
+
 Aplicación web fullstack para registrar y visualizar recuerdos mensuales con persistencia real en la nube.
-Este proyecto no es un prototipo: es un sistema completo con frontend, backend, base de datos y almacenamiento externo, diseñado para resolver problemas reales de persistencia y manejo de archivos.
+
+> Sistema completo con frontend, backend, base de datos y almacenamiento externo. No es un prototipo.
 
 ## Demo
-Frontend: https://jessymanuel.netlify.app
-Backend API: https://mesesario-backend.onrender.com/api/months
+
+- Frontend: https://mesesario-beta.vercel.app  
+- Backend API: https://mesesario-backend.onrender.com/api/months  
 
 ## Descripción
-Mesesario permite registrar momentos importantes por mes mediante:
-* Nombre del mes (ej. "Abril 2025")
-* Descripción
-* Imagen destacada
-Cada registro se almacena en una base de datos externa y su imagen en un servicio de almacenamiento en la nube, asegurando persistencia real y disponibilidad.
+
+Mesesario permite registrar momentos importantes mes a mes con soporte para **dos recuerdos por mes (uno por persona)**:
+
+- Nombre del mes (ej. "Abril 2025")
+- Recuerdo 1 (descripción + imagen)
+- Recuerdo 2 (descripción + imagen)
+- Opción de destacar un mes
+
+Permite construir una **línea del tiempo emocional compartida**.
+
 
 ## Arquitectura
-Frontend (Netlify)
-↓
-Backend API (FastAPI en Render)
-↓
-PostgreSQL (Render)
-↓
+
+Frontend (Vercel)  
+↓  
+Backend API (FastAPI - Render)  
+↓  
+PostgreSQL (Render)  
+↓  
 Cloudinary (Storage de imágenes)
 
 ## Stack Tecnológico
-Frontend:
-* HTML
-* CSS
-* JavaScript
-Backend:
-* Python
-* FastAPI
-* SQLAlchemy
-Infraestructura:
-* Render (API + PostgreSQL)
-* Netlify (Frontend)
-* Cloudinary (Gestión de imágenes)
 
-## Características clave
-* CRUD completo de registros mensuales
-* Subida de imágenes a Cloudinary (no almacenamiento local)
-* Persistencia real en PostgreSQL
-* Eliminación sincronizada:
-  * elimina registro en DB
-  * elimina imagen en Cloudinary
-* Comunicación frontend-backend vía API REST
-* Deploy completo en producción
+### Frontend
+- HTML
+- CSS (Responsive)
+- JavaScript (Fetch API)
 
-##  API
+### Backend
+- Python
+- FastAPI
+- SQLAlchemy
+
+### Infraestructura
+- Render (API + PostgreSQL)
+- Vercel (Frontend)
+- Cloudinary (imágenes)
+
+## Características
+
+- ✔ CRUD completo de meses
+- ✔ Soporte para dos recuerdos por mes
+- ✔ Subida de imágenes a Cloudinary
+- ✔ Persistencia real en PostgreSQL
+- ✔ Eliminación sincronizada (DB + Cloudinary)
+- ✔ API REST desacoplada
+- ✔ Deploy en producción
+- ✔ Diseño responsive
+
+## API
+
+### GET meses
 GET /api/months
-→ Obtiene todos los meses
+
+### POST crear mes
 POST /api/months
-→ Crea un nuevo registro con imagen
+
+Form-data:
+- month_label
+- description_1
+- description_2
+- image_1 (opcional)
+- image_2 (opcional)
+- is_featured
+
+### DELETE mes
 DELETE /api/months/{id}
-→ Elimina el mes y su imagen asociada en la nube
 
 ## Variables de entorno
+
 DATABASE_URL=postgresql://...
 CLOUDINARY_CLOUD_NAME=...
 CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
 
-## Problema técnico resuelto
-Problema:
-Las imágenes se almacenaban localmente en el servidor, lo que provocaba pérdida de datos al reiniciar o redeployar.
-Solución:
-* Migración a Cloudinary para almacenamiento persistente
-* Uso de URLs públicas para servir imágenes
-* Implementación de eliminación real (DB + Cloudinary)
-* Separación correcta entre backend y almacenamiento
+## Problema resuelto
 
-## Estado del proyecto
-✔ Sistema funcional en producción
-✔ Arquitectura fullstack real
-✔ Persistencia asegurada
-✔ Manejo correcto de archivos en la nube
+### Problema
+Las imágenes se almacenaban localmente, lo que provocaba pérdida de datos al redeployar.
 
-## Posibles mejoras
-* Autenticación de usuarios
-* Edición de registros
-* Optimización de imágenes
-* Mejoras en UX/UI
-* Versionado de recuerdos
+### Solución
+- Uso de Cloudinary
+- URLs públicas
+- Eliminación sincronizada
+- Separación backend / storage
+
+## Estado
+
+- ✔ Funcional en producción  
+- ✔ Persistencia asegurada  
+- ✔ Arquitectura fullstack real  
+- ✔ Manejo correcto de archivos  
+
+## Mejoras futuras
+
+- Autenticación
+- Edición de recuerdos
+- Mejor UX/UI
+- App móvil
+- Timeline animado
 
 ## Autor
-Manuel Silva Madrid
-Licenciatura en Ingeniería Ciencias de la Programación
-Enfocado en backend, sistemas y desarrollo de software
 
-## Enfoque
-Este proyecto demuestra:
-* Integración de múltiples servicios (API + DB + Storage)
-* Resolución de problemas reales de persistencia
-* Deploy completo de una arquitectura moderna
-* Capacidad de llevar una idea a producción
+Manuel Silva Madrid
+Licenciaura en Ingeniería en Ciencias de la Computación (BUAP)  
+Enfocado en backend y desarrollo de software  
